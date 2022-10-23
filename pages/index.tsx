@@ -2,9 +2,9 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import useSWR from 'swr'
+import useSWR, { SWRResponse, Fetcher } from 'swr';
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json())
+const fetcher = (arg: any, ...args: any) => fetch(arg, ...args).then((res) => res.json())
 
 const Home: NextPage = () => {
   const { data, mutate, error } = useSWR('/api/advice', fetcher)
