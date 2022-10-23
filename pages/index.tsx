@@ -2,8 +2,16 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import useSWR from 'swr'
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 const Home: NextPage = () => {
+  const { data, mutate, error } = useSWR('/api/advice', fetcher)
+
+  if (error) return <div>Failed to load</div>
+  if (!data) return <div>Loading...</div>
+
   return (
     <div className={styles.container}>
       <Head>
@@ -18,11 +26,10 @@ const Home: NextPage = () => {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
+          {data.advice}
         </p>
 
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md shadow">Another one</button>
+        <button onClick={() => mutate()} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md shadow">Another one</button>
 
       </main>
 
